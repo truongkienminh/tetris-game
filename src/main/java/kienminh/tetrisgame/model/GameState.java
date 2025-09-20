@@ -1,43 +1,25 @@
+// GameState.java
 package kienminh.tetrisgame.model;
 
 import kienminh.tetrisgame.enums.GameStatus;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
+@Setter
 public class GameState {
-    private final Long roomId;                 // Id của phòng chơi
-    private GameStatus status;                 // WAITING, PLAYING, GAME_OVER
-    private final Map<Long, PlayerState> players; // Danh sách player trong game
+    private String roomId;
+    private GameStatus status = GameStatus.WAITING;
+    private Map<Long, PlayerState> players = new HashMap<>();
 
-    public GameState(Long roomId) {
+    public GameState(String roomId) {
         this.roomId = roomId;
-        this.status = GameStatus.WAITING;
-        this.players = new HashMap<>();
     }
 
-    public Long getRoomId() {
-        return roomId;
-    }
-
-    public GameStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(GameStatus status) {
-        this.status = status;
-    }
-
-    public Map<Long, PlayerState> getPlayers() {
-        return Collections.unmodifiableMap(players);
-    }
-
-    public void addPlayer(Long playerId, PlayerState playerState) {
-        players.put(playerId, playerState);
-    }
-
-    public PlayerState getPlayer(Long playerId) {
-        return players.get(playerId);
+    public void addPlayer(Long userId, PlayerState player) {
+        players.put(userId, player);
     }
 }

@@ -1,51 +1,22 @@
+// PlayerState.java
 package kienminh.tetrisgame.model;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
+@Getter
+@Setter
 public class PlayerState {
     private final int[][] board;
     private Block currentBlock;
-    private final Queue<Block> nextBlocks;
-    private boolean alive;
-    private int score;
+    private final Queue<Block> nextBlocks = new LinkedList<>();
+    private boolean alive = true;
+    private int score = 0;
 
     public PlayerState(int width, int height) {
         this.board = new int[height][width];
-        this.nextBlocks = new LinkedList<>();
-        this.alive = true;
-        this.score = 0;
-    }
-
-    public int[][] getBoard() {
-        return board;
-    }
-
-    public Block getCurrentBlock() {
-        return currentBlock;
-    }
-
-    public void setCurrentBlock(Block currentBlock) {
-        this.currentBlock = currentBlock;
-    }
-
-    public Queue<Block> getNextBlocks() {
-        return nextBlocks;
-    }
-
-    public boolean isAlive() {
-        return alive;
-    }
-
-    public void setAlive(boolean alive) {
-        this.alive = alive;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 }

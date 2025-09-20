@@ -11,14 +11,11 @@ public class BlockFactory {
     private final Random random = new Random();
 
     public Block createRandomBlock(int boardWidth) {
-        BlockType[] types = BlockType.values(); //Lấy ra toàn bộ enum BlockType.
+        BlockType[] types = BlockType.values();
         BlockType type = types[random.nextInt(types.length)];
         int[][] shape = deepCopy(type.getShape());
-
-        // spawn ở giữa màn hình trên cùng
         int x = boardWidth / 2 - shape[0].length / 2;
         int y = 0;
-
         return new Block(type, shape, x, y);
     }
 

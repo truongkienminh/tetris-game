@@ -4,6 +4,6 @@ public enum GameAction {
     MOVE_LEFT,
     MOVE_RIGHT,
     ROTATE,
-    DROP,
+    SOFT_DROP,
     HARD_DROP
 }
