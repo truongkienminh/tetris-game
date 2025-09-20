@@ -37,4 +37,31 @@ public class RoomController {
         roomService.removePlayer(room, player);
         return ResponseEntity.ok(room);
     }
+
+    // ================================
+    // Tạo link mời người chơi
+    // ================================
+    @GetMapping("/{roomId}/invite-link")
+    public ResponseEntity<String> getInviteLink(@PathVariable Long roomId) {
+        // Tạo token
+        String token = roomService.generateInviteToken(roomId);
+        String link = "http://localhost:3000/join-room?token=" + token;
+        return ResponseEntity.ok(link);
+    }
+
+    // ================================
+    // Auto join bằng token
+    // ================================
+    @PostMapping("/join-by-token")
+    public ResponseEntity<Room> joinByToken(@RequestParam String token,
+                                            @RequestBody Player player) {
+        Long roomId = roomService.getRoomIdByToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid or expired invite link"));
+
+        Room room = roomService.getRoomById(roomId)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+
+        room = roomService.addPlayer(room, player);
+        return ResponseEntity.ok(room);
+    }
 }

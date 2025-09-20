@@ -6,13 +6,15 @@ import kienminh.tetrisgame.enums.RoomStatus;
 import kienminh.tetrisgame.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class RoomService {
 
     private final RoomRepository roomRepository;
+
+    // Map lưu tạm token -> roomId
+    private final Map<String, Long> inviteTokens = new HashMap<>();
 
     public RoomService(RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
@@ -41,5 +43,18 @@ public class RoomService {
 
     public Optional<Room> getRoomById(Long id) {
         return roomRepository.findById(id);
+    }
+
+    // ========================
+    // Mời người chơi bằng link
+    // ========================
+    public String generateInviteToken(Long roomId) {
+        String token = UUID.randomUUID().toString();
+        inviteTokens.put(token, roomId);
+        return token;
+    }
+
+    public Optional<Long> getRoomIdByToken(String token) {
+        return Optional.ofNullable(inviteTokens.get(token));
     }
 }
