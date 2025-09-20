@@ -1,11 +1,7 @@
 package kienminh.tetrisgame.entity;
 
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
@@ -20,15 +16,15 @@ public class MatchPlayer {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "player_id")
+    private Player player;
 
     @ManyToOne
     @JoinColumn(name = "match_id")
     private Match match;
 
-    private int score;
-    private boolean winner;
+    private int score = 0;
 
-
+    private boolean winner = false;
 }
+

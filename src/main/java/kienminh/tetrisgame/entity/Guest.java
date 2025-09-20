@@ -8,10 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
-public class User extends Player {
+@Table(name = "guests")
+public class Guest extends Player {
 
-    private String password;
-
-    private String email;
+    private String sessionId; // có thể dùng UUID để định danh guest
 }
