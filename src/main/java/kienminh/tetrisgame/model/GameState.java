@@ -1,35 +1,43 @@
 package kienminh.tetrisgame.model;
 
 import kienminh.tetrisgame.enums.GameStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class GameState {
-
-    private Long roomId;
-    private GameStatus status = GameStatus.WAITING;
-
-    private Map<Long, PlayerState> players = new HashMap<>();
+    private final Long roomId;                 // Id của phòng chơi
+    private GameStatus status;                 // WAITING, PLAYING, GAME_OVER
+    private final Map<Long, PlayerState> players; // Danh sách player trong game
 
     public GameState(Long roomId) {
         this.roomId = roomId;
+        this.status = GameStatus.WAITING;
+        this.players = new HashMap<>();
     }
 
-    public void addPlayer(PlayerState player) {
-        players.put(player.getUserId(), player);
+    public Long getRoomId() {
+        return roomId;
     }
 
-    public void removePlayer(Long userId) {
-        players.remove(userId);
+    public GameStatus getStatus() {
+        return status;
     }
 
+    public void setStatus(GameStatus status) {
+        this.status = status;
+    }
+
+    public Map<Long, PlayerState> getPlayers() {
+        return Collections.unmodifiableMap(players);
+    }
+
+    public void addPlayer(Long playerId, PlayerState playerState) {
+        players.put(playerId, playerState);
+    }
+
+    public PlayerState getPlayer(Long playerId) {
+        return players.get(playerId);
+    }
 }

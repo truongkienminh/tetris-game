@@ -1,29 +1,53 @@
 package kienminh.tetrisgame.model;
 
+import kienminh.tetrisgame.enums.BlockType;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Block {
-
-    private String type;
-    private String color;
+    private final BlockType type;
+    private int[][] shape;
     private int x;
     private int y;
-    private int[][] shape;
 
-    public Block(String type, String color, int[][] shape) {
+    public Block(BlockType type, int[][] shape, int x, int y) {
         this.type = type;
-        this.color = color;
         this.shape = shape;
-        this.x = 3;
-        this.y = 0;
+        this.x = x;
+        this.y = y;
     }
 
+    public Block copy() {
+        int[][] newShape = new int[shape.length][];
+        for (int i = 0; i < shape.length; i++) {
+            newShape[i] = shape[i].clone();
+        }
+        return new Block(type, newShape, x, y);
+    }
+
+    public BlockType getType() {
+        return type;
+    }
+
+    public int[][] getShape() {
+        return shape;
+    }
+
+    public void setShape(int[][] shape) {
+        this.shape = shape;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
 }
