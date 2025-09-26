@@ -73,6 +73,19 @@ public class GameController {
         dto.setPlayerScores(scores);
         return dto;
     }
+    // Kết thúc game
+    @PostMapping("/end/{roomId}")
+    public GameStateDTO endGame(@PathVariable String roomId) {
+        GameState game = gameService.endGame(roomId);
+        return toDTO(game);
+    }
+
+    // Lấy trạng thái game
+    @GetMapping("/{roomId}")
+    public GameStateDTO getGameState(@PathVariable String roomId) {
+        GameState game = gameService.getGameState(roomId);
+        return toDTO(game);
+    }
 
     private kienminh.tetrisgame.model.GameEvent mapToEvent(GameEventDTO dto) {
         var event = new kienminh.tetrisgame.model.GameEvent();

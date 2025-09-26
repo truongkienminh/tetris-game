@@ -1,10 +1,13 @@
 package kienminh.tetrisgame.controller;
 
+import kienminh.tetrisgame.dto.RoomDto;
 import kienminh.tetrisgame.entity.Player;
 import kienminh.tetrisgame.entity.Room;
 import kienminh.tetrisgame.service.RoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/rooms")
@@ -17,9 +20,9 @@ public class RoomController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Room> createRoom(@RequestParam String name, @RequestBody Player host) {
-        Room room = roomService.createRoom(name, host);
-        return ResponseEntity.ok(room);
+    public ResponseEntity<RoomDto> createRoom(@RequestParam String name, @RequestBody Player host) {
+        RoomDto roomDto = roomService.createRoom(name, host);
+        return ResponseEntity.ok(roomDto);
     }
 
     @PostMapping("/{roomId}/join")
@@ -63,5 +66,36 @@ public class RoomController {
 
         room = roomService.addPlayer(room, player);
         return ResponseEntity.ok(room);
+    }
+
+    @GetMapping("/active")
+    public List<RoomDto> getActiveRooms() {
+        return roomService.getActiveRooms();
+    }
+
+    @GetMapping("/{roomId}")
+    public ResponseEntity<RoomDto> getRoomDetails(@PathVariable Long roomId) {
+        return roomService.getRoomDetails(roomId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{roomId}/delete")
+    public ResponseEntity<Void> deleteRoom(@PathVariable Long roomId) {
+        roomService.deleteRoom(roomId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{roomId}/transfer-host/{newHostId}")
+    public ResponseEntity<Void> transferHost(@PathVariable Long roomId, @PathVariable Long newHostId) {
+        Room room = roomService.getRoomById(roomId)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+        Player newHost = room.getPlayers().stream()
+                .filter(p -> p.getId().equals(newHostId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Player not in room"));
+
+        roomService.transferHost(room, newHost);
+        return ResponseEntity.ok().build();
     }
 }

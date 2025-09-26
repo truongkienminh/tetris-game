@@ -1,5 +1,6 @@
 package kienminh.tetrisgame.service;
 
+import kienminh.tetrisgame.dto.PlayerScoreDTO;
 import kienminh.tetrisgame.entity.Match;
 import kienminh.tetrisgame.entity.MatchPlayer;
 import kienminh.tetrisgame.entity.Player;
@@ -9,8 +10,8 @@ import kienminh.tetrisgame.repository.MatchPlayerRepository;
 import kienminh.tetrisgame.repository.MatchRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MatchService {
@@ -51,6 +52,19 @@ public class MatchService {
             Player p = mp.getPlayer();
             p.setHighScore(Math.max(p.getHighScore(), mp.getScore()));
         });
+    }
+
+    public List<PlayerScoreDTO> getFinalScores(Long matchId) {
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new RuntimeException("Match not found"));
+
+        return match.getMatchPlayers().stream()
+                .map(mp -> new PlayerScoreDTO(
+                        mp.getPlayer().getId(),
+                        mp.getPlayer().getUsername(),
+                        mp.getScore()
+                ))
+                .collect(Collectors.toList());
     }
 
     public Optional<Match> getMatchById(Long id) {

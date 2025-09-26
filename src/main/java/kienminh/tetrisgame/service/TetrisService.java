@@ -3,6 +3,7 @@ package kienminh.tetrisgame.service;
 import kienminh.tetrisgame.model.Block;
 import kienminh.tetrisgame.model.GameEvent;
 import kienminh.tetrisgame.model.PlayerState;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,9 +12,11 @@ public class TetrisService {
     private static final int BOARD_WIDTH = 10;
     private static final int BOARD_HEIGHT = 20;
     private final BlockFactory blockFactory;
+    private final GameService gameService;
 
-    public TetrisService(BlockFactory blockFactory) {
+    public TetrisService(BlockFactory blockFactory,@Lazy GameService gameService) {
         this.blockFactory = blockFactory;
+        this.gameService = gameService;
     }
 
     public void initPlayer(PlayerState player) {
@@ -23,7 +26,11 @@ public class TetrisService {
     public void spawnNewBlock(PlayerState player) {
         Block block = blockFactory.createRandomBlock(BOARD_WIDTH);
         player.setCurrentBlock(block);
-        if (checkCollision(player, block)) player.setAlive(false);
+        if (checkCollision(player, block)) {
+            player.setAlive(false);
+            // Sau khi 1 player chết -> check xem game còn ai sống không
+            gameService.checkGameOver(player.getRoomId());
+        }
     }
 
     public void handleEvent(PlayerState player, GameEvent event) {

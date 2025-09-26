@@ -1,5 +1,6 @@
 package kienminh.tetrisgame.controller;
 
+import kienminh.tetrisgame.dto.PlayerScoreDTO;
 import kienminh.tetrisgame.entity.Match;
 import kienminh.tetrisgame.entity.Player;
 import kienminh.tetrisgame.entity.Room;
@@ -8,6 +9,7 @@ import kienminh.tetrisgame.service.RoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,5 +55,11 @@ public class MatchController {
                 .map(mp -> mp.getPlayer())
                 .collect(Collectors.toSet());
         return ResponseEntity.ok(players);
+    }
+
+    @GetMapping("/{matchId}/scores")
+    public ResponseEntity<List<PlayerScoreDTO>> getMatchScores(@PathVariable Long matchId) {
+        List<PlayerScoreDTO> scores = matchService.getFinalScores(matchId);
+        return ResponseEntity.ok(scores);
     }
 }

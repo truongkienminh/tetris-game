@@ -28,6 +28,8 @@ public class GameService {
 
         for (Long userId : playerIds) {
             PlayerState player = new PlayerState(10, 20);
+            player.setPlayerId(userId);
+            player.setRoomId(roomId);
             tetrisService.initPlayer(player);
             game.addPlayer(userId, player);
         }
@@ -35,6 +37,7 @@ public class GameService {
         activeGames.put(roomId, game);
         return game;
     }
+
 
     public GameState startGame(String roomId) {
         GameState game = activeGames.get(roomId);
@@ -50,7 +53,34 @@ public class GameService {
         if (player == null || !player.isAlive()) return game;
 
         tetrisService.handleEvent(player, event);
+
+        // check game over sau mỗi move
+        checkGameOver(roomId);
+
         return game;
+    }
+
+    public GameState endGame(String roomId) {
+        GameState game = activeGames.get(roomId);
+        if (game != null) {
+            game.setStatus(GameStatus.FINISHED);
+            // Nếu muốn xoá luôn thì dùng removeGame(roomId)
+        }
+        return game;
+    }
+
+    public GameState getGameState(String roomId) {
+        return activeGames.get(roomId);
+    }
+
+    public void checkGameOver(String roomId) {
+        GameState game = activeGames.get(roomId);
+        if (game == null) return;
+
+        boolean allDead = game.getPlayers().values().stream().allMatch(p -> !p.isAlive());
+        if (allDead) {
+            endGame(roomId);
+        }
     }
 
     public void removeGame(String roomId) {

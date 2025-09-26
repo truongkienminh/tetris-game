@@ -10,6 +10,8 @@ import java.util.Queue;
 @Getter
 @Setter
 public class PlayerState {
+    private Long playerId;
+    private String roomId;
     private final int[][] board;
     private Block currentBlock;
     private final Queue<Block> nextBlocks = new LinkedList<>();

@@ -17,9 +17,7 @@ public class RankingService {
     }
 
 
-    /**
-     * Lấy top N player theo highScore giảm dần
-     */
+
     public List<Player> getTopPlayers(int limit) {
         return playerRepository.findAllByOrderByHighScoreDesc(PageRequest.of(0, limit));
     }
